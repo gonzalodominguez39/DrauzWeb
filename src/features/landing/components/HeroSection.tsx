@@ -1,18 +1,16 @@
 'use client';
 
 import { SearchBar } from '@/features/search/components/SearchBar';
-import { HERO_BACKGROUND_IMAGE } from '@/config/constants';
+
 
 export const HeroSection = () => {
   return (
     <div className="relative py-16 sm:py-24">
-      <div 
-        className="absolute inset-0 bg-cover bg-center" 
-        style={{
-          backgroundImage: `linear-gradient(rgba(18, 18, 18, 0.8) 0%, rgba(18, 18, 18, 1) 100%), url("${HERO_BACKGROUND_IMAGE}")`
-        }}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+
       />
-      
+
       <div className="relative container mx-auto px-4 text-center">
         <div className="flex flex-col gap-6 items-center">
           <div className="flex flex-col gap-2">
@@ -23,7 +21,7 @@ export const HeroSection = () => {
               Explora las mejores propiedades en venta y alquiler en las ubicaciones más exclusivas.
             </h2>
           </div>
-          
+
           <SearchBar />
         </div>
       </div>

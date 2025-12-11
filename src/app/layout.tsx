@@ -1,8 +1,17 @@
 import type { Metadata } from 'next'
-import { Manrope } from 'next/font/google'
 import './globals.css'
+import { Sansita, Momo_Trust_Display } from 'next/font/google';
 
-const manrope = Manrope({ subsets: ['latin'] })
+const sansita = Sansita({
+  subsets: ['latin'],
+  weight: ['400', '700', '800', '900'],
+  style: ['normal', 'italic'],
+});
+
+const momo = Momo_Trust_Display({
+  subsets: ['latin'],
+  weight: '400',
+});
 
 export const metadata: Metadata = {
   title: 'Inmobiliaria Drauz - Encuentra tu hogar ideal',
@@ -15,8 +24,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="dark">
-      <body className={manrope.className}>{children}</body>
+    <html className={`${sansita.className} ${momo.className}`}>
+      <body>{children}</body>
     </html>
-  )
+  );
+
 }
