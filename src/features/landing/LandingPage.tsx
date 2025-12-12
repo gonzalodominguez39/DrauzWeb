@@ -1,5 +1,6 @@
 import { Header } from '@/shared/components/layout/Header';
 import { Footer } from '@/shared/components/layout/Footer';
+import { FloatingMenu } from '@/shared/components/layout/FloatingMenu';
 import { HeroSection } from './components/HeroSection';
 import { CTASection } from './components/CTASection';
 import { PropertyGrid } from '@/features/properties/components/PropertyGrid';
@@ -15,16 +16,13 @@ export const LandingPage = () => {
       }}>
         <Header />
         <HeroSection />
-
       </div>
-
       <main>
-
         <PropertyGrid properties={featuredProperties} />
         <CTASection />
       </main>
-
       <Footer />
+      <FloatingMenu />
     </div>
   );
 };

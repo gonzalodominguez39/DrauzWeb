@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -27,5 +27,19 @@ body {
   font-weight: 400;
   font-style: normal;
   color: var(--foreground);
+}
 
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out forwards;
 }

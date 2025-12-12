@@ -1,107 +1,134 @@
 'use client';
 
-import { Navigation } from './Navigation';
 import { COMPANY_INFO } from '@/config/constants';
 import drauzLogo from '@/assets/images/logo_drauz.png';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { HiMenu, HiX } from 'react-icons/hi';
-import { FaHome, FaBuilding, FaProjectDiagram, FaUsers, FaEnvelope } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
-const MENU_ITEMS = [
-  { label: 'Venta', href: '#', icon: FaHome },
-  { label: 'Alquiler', href: '#', icon: FaBuilding },
-  { label: 'Proyectos', href: '#', icon: FaProjectDiagram },
-  { label: 'Nosotros', href: '#', icon: FaUsers },
-  { label: 'Contacto', href: '#', icon: FaEnvelope },
+
+const NAV_ITEMS = [
+  { label: 'Venta', href: '#' },
+  { label: 'Alquiler', href: '#' },
+  { label: 'Proyectos', href: '#' },
+  { label: 'Nosotros', href: '#' },
+  { label: 'Contacto', href: '#' },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: -20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring' as const,
+      stiffness: 300,
+      damping: 24,
+    },
+  },
+};
+
 export const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const shouldBeScrolled = scrollPosition > 100;
-      console.log('Scroll position:', scrollPosition, 'isScrolled:', shouldBeScrolled);
-      setIsScrolled(shouldBeScrolled);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  const router = useRouter();
   return (
-    <header className={`sticky top-0 z-50 backdrop-blur-sm transition-all duration-300 ${isScrolled ? 'bg-black/80' : 'bg-gradient-to-b from-black/40 via-black/20 to-transparent'
-      }`}>
+    <motion.header
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{
+        type: 'spring',
+        stiffness: 100,
+        damping: 20,
+        duration: 0.8,
+      }}
+      className="sticky top-0 z-40 backdrop-blur-sm bg-gradient-to-b from-black/40 via-black/20 to-transparent"
+    >
       <div className="container mx-auto">
-        {!isScrolled ? (
-          // Full header when at top
-          <div className="flex items-center p-4 justify-between">
-            <div className="rounded-full overflow-hidden object-contain m-3 w-18 h-18">
-              <Image src={drauzLogo} alt="drauz logo" />
-            </div>
-            <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em] flex-1">
-              {COMPANY_INFO.name}
-            </h2>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex items-center p-4 justify-between"
+        >
+          {/* Logo */}
+          <motion.div
+            variants={itemVariants}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/')}
+            className="rounded-full overflow-hidden object-contain m-3 w-20 h-20"
+          >
+            <Image src={drauzLogo} alt="drauz logo" />
+          </motion.div>
 
-            <Navigation />
+          {/* Company Name */}
+          <motion.h2
+            variants={itemVariants}
+            className="text-white text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] flex-1 bg-gradient-to-r from-white via-[#009B77] to-white bg-clip-text text-transparent"
+          >
+            {COMPANY_INFO.name}
+          </motion.h2>
 
-            <div className="flex flex-1 items-center justify-end">
-              <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#009B77] text-[#121212] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#00b388] transition-colors">
-                <span className="truncate">Iniciar Sesión</span>
-              </button>
+          {/* Desktop Navigation */}
+          <motion.nav
+            variants={itemVariants}
+            className="hidden md:flex flex-1 items-center justify-center"
+          >
+            <div className="flex gap-8">
+              {NAV_ITEMS.map((item, index) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  className="relative text-base font-bold text-white/70 hover:text-white transition-colors group pb-2"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.5 + index * 0.1,
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 24,
+                  }}
+                  whileHover={{ scale: 1.1, y: -2, transition: { duration: 0 } }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {item.label}
+                  {/* Animated underline - expands from center */}
+                  <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#009B77] to-[#00b388] rounded-full origin-center scale-x-0 group-hover:scale-x-100 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out" />
+                  {/* Glow effect */}
+                  <span className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 blur-xl bg-[#009B77]/20 transition-opacity duration-300" />
+                </motion.a>
+              ))}
             </div>
-          </div>
-        ) : (
-          // Collapsed header when scrolled
-          <div className="flex items-center p-3 justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-full overflow-hidden object-contain w-12 h-12">
-                <Image src={drauzLogo} alt="drauz logo" />
-              </div>
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white hover:text-[#009B77] transition-colors p-2"
-                aria-label="Toggle menu"
-              >
-                {isMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
-              </button>
-            </div>
+          </motion.nav>
 
-            <div className="flex items-center justify-end">
-              <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#009B77] text-[#121212] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#00b388] transition-colors">
-                <span className="truncate">Iniciar Sesión</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Dropdown Menu */}
-        {isScrolled && isMenuOpen && (
-          <div className="absolute top-full left-0 w-full bg-black/95 backdrop-blur-md border-t border-white/10 animate-in slide-in-from-top duration-300">
-            <div className="container mx-auto p-4">
-              <nav className="flex flex-col gap-2">
-                {MENU_ITEMS.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 group"
-                    >
-                      <Icon className="text-[#009B77] group-hover:scale-110 transition-transform" size={20} />
-                      <span className="font-medium">{item.label}</span>
-                    </a>
-                  );
-                })}
-              </nav>
-            </div>
-          </div>
-        )}
+          {/* Login Button */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-1 items-center justify-end"
+          >
+            <motion.button
+              className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-gradient-to-r from-[#009B77] to-[#00b388] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-[#009B77]/30"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: '0 0 25px rgba(0, 155, 119, 0.6)',
+                transition: { duration: 0.2 },
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="truncate">Iniciar Sesión</span>
+            </motion.button>
+          </motion.div>
+        </motion.div>
       </div>
-    </header>
+    </motion.header>
   );
 };

@@ -8,8 +8,9 @@ export interface Property {
   bathrooms: number;
   area: number;
   badge?: PropertyBadge;
+  forSale?: boolean;
+  forRent?: boolean;
   isRental?: boolean;
-  // Campos extendidos para página de detalles
   description?: string;
   features?: string[];
   amenities?: string[];
