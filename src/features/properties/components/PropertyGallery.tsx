@@ -12,6 +12,7 @@ export const PropertyGallery = ({ images, alt }: PropertyGalleryProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   if (!images || images.length === 0) {
+    console.log('No images provided', images[0]);
     return null;
   }
 
@@ -26,7 +27,7 @@ export const PropertyGallery = ({ images, alt }: PropertyGalleryProps) => {
           className="object-cover"
           priority
         />
-        
+
         {/* Contador de imágenes */}
         <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
           {selectedIndex + 1} / {images.length}
@@ -39,16 +40,18 @@ export const PropertyGallery = ({ images, alt }: PropertyGalleryProps) => {
           <button
             key={index}
             onClick={() => setSelectedIndex(index)}
-            className={`relative h-20 rounded-lg overflow-hidden border-2 transition-all ${
-              selectedIndex === index
-                ? 'border-[#009B77] scale-105'
-                : 'border-transparent hover:border-white/30'
-            }`}
+            className={`relative h-20 rounded-lg overflow-hidden border-2 transition-all ${selectedIndex === index
+              ? 'border-[#009B77] scale-105'
+              : 'border-transparent hover:border-white/30'
+              }`}
           >
             <Image
               src={image}
               alt={`${alt} thumbnail ${index + 1}`}
               fill
+              sizes="(max-width: 768px) 100vw,
+         (max-width: 1200px) 50vw,
+         33vw"
               className="object-cover"
             />
           </button>

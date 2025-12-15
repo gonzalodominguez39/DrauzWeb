@@ -3,6 +3,8 @@
 import { SearchBar } from '@/features/search/components/SearchBar';
 
 
+
+
 export const HeroSection = () => {
   return (
     <div className="relative py-16 sm:py-24">

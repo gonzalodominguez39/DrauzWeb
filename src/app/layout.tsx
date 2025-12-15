@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Sansita, Momo_Trust_Display } from 'next/font/google';
 
+
 const sansita = Sansita({
   subsets: ['latin'],
   weight: ['400', '700', '800', '900'],

@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPropertyById } from '@/features/properties/utils/getPropertyById';
@@ -5,8 +6,7 @@ import { PropertyGallery } from '@/features/properties/components/PropertyGaller
 import { PropertyInfo } from '@/features/properties/components/PropertyInfo';
 import { PropertyFeatures } from '@/features/properties/components/PropertyFeatures';
 import { PropertyContact } from '@/features/properties/components/PropertyContact';
-import { Header } from '@/shared/components/layout/Header';
-import { Footer } from '@/shared/components/layout/Footer';
+
 
 interface PropertyPageProps {
   params: Promise<{
@@ -18,18 +18,17 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const { id } = await params;
   const property = getPropertyById(id);
 
+
   if (!property) {
     notFound();
   }
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-[#121212]">
-      <Header />
-      
+    <div className="relative flex min-h-screen w-full flex-col ">
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
           {/* Botón volver */}
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-6 group"
           >
@@ -61,8 +60,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
         </div>
       </main>
-      
-      <Footer />
+
     </div>
   );
 }
