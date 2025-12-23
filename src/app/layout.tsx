@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Sansita, Momo_Trust_Display } from 'next/font/google';
+import { QueryProvider } from '@/lib/queryClient';
 
 
 const sansita = Sansita({
@@ -26,7 +27,13 @@ export default function RootLayout({
 }) {
   return (
     <html className={`${sansita.className} ${momo.className}`}>
-      <body>{children}</body>
+      <div className="relative flex min-h-screen w-full flex-col bg-[#121212]">
+        <body>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
+        </body>
+      </div>
     </html>
   );
 

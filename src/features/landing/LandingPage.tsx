@@ -1,7 +1,5 @@
 
 'use client';
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from '@/shared/components/layout/Header';
 import { Footer } from '@/shared/components/layout/Footer';
 import { FloatingMenu } from '@/shared/components/layout/FloatingMenu';
@@ -10,13 +8,18 @@ import { CTASection } from './components/CTASection';
 import { PropertyGrid } from '@/features/properties/components/PropertyGrid';
 import { HERO_BACKGROUND_IMAGE } from '@/config/constants';
 import { useFilterPropertiesStore } from '@/features/search/hooks/useFilterPropertiesStore';
-import useLogin from '../login/hooks/useLogin';
 import Login from '../login/Login';
+import { ButtonWpp } from '@/shared/components/layout/ButtonWpp';
+import { useAuthStore } from '../login/store/useAuthStore';
+
+
+
 
 
 export const LandingPage = () => {
   const { filteredProperties } = useFilterPropertiesStore();
-  const { authView, onLoginClick, onSignupClick, onCloseClick } = useLogin();
+  const { authView, onLoginClick } = useAuthStore();
+
   return (
     <>
 
@@ -30,9 +33,14 @@ export const LandingPage = () => {
         <PropertyGrid properties={filteredProperties} />
         <CTASection />
       </main>
+      <div className="flex flex-col  right-4 z-50">
+
+        <FloatingMenu />
+        <ButtonWpp />
+      </div>
       <Footer />
-      <FloatingMenu />
-      authView && <Login authView={authView} onCloseClick={onCloseClick} onLoginClick={onLoginClick} onSignupClick={onSignupClick} />
+
+      authView && <Login authView={authView} />
 
 
 

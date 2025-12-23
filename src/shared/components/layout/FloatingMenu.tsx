@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import drauzLogo from '@/assets/images/logo_drauz.png';
 import { HiMenu, HiX } from 'react-icons/hi';
-import { FaHome, FaBuilding, FaProjectDiagram, FaUsers, FaEnvelope } from 'react-icons/fa';
+import { FaHome, FaBuilding, FaProjectDiagram, FaUsers, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MENU_ITEMS = [
@@ -14,6 +14,8 @@ const MENU_ITEMS = [
     { label: 'Nosotros', href: '#', icon: FaUsers },
     { label: 'Contacto', href: '#', icon: FaEnvelope },
 ];
+
+
 
 export const FloatingMenu = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -33,6 +35,8 @@ export const FloatingMenu = () => {
 
     return (
         <>
+
+
             {/* Floating Button */}
             <motion.button
                 initial={{ y: 100, opacity: 0 }}

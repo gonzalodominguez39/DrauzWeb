@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion"
+import { useSignup } from "../hooks/useSignup"
+import { useState } from "react"
 
 interface SignupFormProps extends React.ComponentProps<"div"> {
     onLoginClick?: () => void;
@@ -17,11 +19,42 @@ export function SignupForm({
     onCloseClick,
     ...props
 }: SignupFormProps) {
+    const { signupAsync, isLoading, error, success, reset } = useSignup();
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [id]: value,
+        }));
+        // Reset error when user starts typing
+        if (error) reset();
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            await signupAsync(formData);
+            // Si el signup es exitoso, redirigir al login después de 2 segundos
+            setTimeout(() => {
+                onLoginClick?.();
+            }, 2000);
+        } catch (err) {
+            // El error ya está manejado en el hook
+            console.error("Error en signup:", err);
+        }
+    };
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card className="overflow-hidden border border-white/10 bg-[#121212]/95 text-white shadow-2xl backdrop-blur-xl rounded-3xl">
                 {/* Efecto de brillo sutil */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none rounded-3xl" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none rounded-3xl" />
 
                 <CardHeader className="space-y-3 text-center relative pb-8 pt-8">
                     <motion.button
@@ -33,7 +66,7 @@ export function SignupForm({
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x h-5 w-5"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                         <span className="sr-only">Cerrar</span>
                     </motion.button>
-                    <CardTitle className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
+                    <CardTitle className="text-4xl font-bold tracking-tight bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
                         Crear cuenta
                     </CardTitle>
                     <CardDescription className="text-white/60 text-base font-normal">
@@ -42,56 +75,92 @@ export function SignupForm({
                 </CardHeader>
 
                 <CardContent className="grid gap-6 relative px-8 pb-8">
-                    {/* Email */}
-                    <div className="grid gap-3">
-                        <Label htmlFor="email" className="text-white/90 text-sm font-semibold">
-                            Email
-                        </Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            placeholder="m@ejemplo.com"
-                            required
-                            className="bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
-                        />
-                    </div>
+                    {/* Error Message */}
+                    {error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-2xl text-sm"
+                        >
+                            {error}
+                        </motion.div>
+                    )}
 
-                    {/* Passwords */}
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* Success Message */}
+                    {success && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-[#009B77]/10 border border-[#009B77]/20 text-[#009B77] px-4 py-3 rounded-2xl text-sm"
+                        >
+                            ¡Cuenta creada exitosamente! Redirigiendo al inicio de sesión...
+                        </motion.div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="grid gap-6">
+                        {/* Email */}
                         <div className="grid gap-3">
-                            <Label htmlFor="password" className="text-white/90 text-sm font-semibold">Contraseña</Label>
+                            <Label htmlFor="email" className="text-white/90 text-sm font-semibold">
+                                Email
+                            </Label>
                             <Input
-                                id="password"
-                                type="password"
+                                id="email"
+                                type="email"
+                                placeholder="m@ejemplo.com"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                disabled={isLoading}
                                 required
-                                className="bg-white/5 border border-white/10 text-white focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
+                                className="bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
                             />
                         </div>
-                        <div className="grid gap-3">
-                            <Label htmlFor="confirm-password" className="text-white/90 text-sm font-semibold">Confirmar</Label>
-                            <Input
-                                id="confirm-password"
-                                type="password"
-                                required
-                                className="bg-white/5 border border-white/10 text-white focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
-                            />
+
+                        {/* Passwords */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-3">
+                                <Label htmlFor="password" className="text-white/90 text-sm font-semibold">Contraseña</Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    disabled={isLoading}
+                                    required
+                                    className="bg-white/5 border border-white/10 text-white focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
+                                />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="confirmPassword" className="text-white/90 text-sm font-semibold">Confirmar</Label>
+                                <Input
+                                    id="confirmPassword"
+                                    type="password"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    disabled={isLoading}
+                                    required
+                                    className="bg-white/5 border border-white/10 text-white focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="text-xs text-white/40 text-center -mt-2">
-                        Debe tener al menos 8 caracteres.
-                    </div>
+                        <div className="text-xs text-white/40 text-center -mt-2">
+                            Debe tener al menos 8 caracteres.
+                        </div>
 
-                    {/* Botón Crear Cuenta */}
-                    <motion.button
-                        className="w-full rounded-2xl h-12 bg-gradient-to-r from-[#009B77] to-[#00b388] hover:from-[#00b388] hover:to-[#009B77] text-[#121212] font-bold text-base shadow-xl shadow-[#009B77]/20 hover:shadow-[#009B77]/40 transition-all duration-300 relative overflow-hidden group mt-2"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        type="submit"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <span className="relative">Crear Cuenta</span>
-                    </motion.button>
+                        {/* Botón Crear Cuenta */}
+                        <motion.button
+                            className="w-full rounded-2xl h-12 bg-linear-to-r from-[#009B77] to-[#00b388] hover:from-[#00b388] hover:to-[#009B77] text-[#121212] font-bold text-base shadow-xl shadow-[#009B77]/20 hover:shadow-[#009B77]/40 transition-all duration-300 relative overflow-hidden group mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            whileHover={!isLoading ? { scale: 1.02 } : {}}
+                            whileTap={!isLoading ? { scale: 0.98 } : {}}
+                            type="submit"
+                            disabled={isLoading || success}
+                        >
+                            <div className="absolute inset-0 bg-linear-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <span className="relative">
+                                {isLoading ? "Creando cuenta..." : success ? "¡Cuenta creada!" : "Crear Cuenta"}
+                            </span>
+                        </motion.button>
+                    </form>
 
                     {/* Separador */}
                     <div className="relative my-2">

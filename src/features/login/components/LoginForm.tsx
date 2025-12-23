@@ -1,3 +1,4 @@
+'use client';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -5,23 +6,27 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { useAuthStore } from "../store/useAuthStore";
+import { useLoginAuth } from "../hooks/useLoginAuth";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
-    onSignupClick?: () => void;
-    onCloseClick?: () => void;
+
 }
 
 export function LoginForm({
     className,
-    onSignupClick,
-    onCloseClick,
     ...props
 }: LoginFormProps) {
+    const { onCloseClick, onLoginClick, onSignupClick } = useAuthStore();
+    const { onLogin } = useLoginAuth();
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card className="overflow-hidden border border-white/10 bg-[#121212]/95 text-white shadow-2xl backdrop-blur-xl rounded-3xl">
-                {/* Efecto de brillo sutil */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none rounded-3xl" />
+
+                <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none rounded-3xl" />
 
                 <CardHeader className="space-y-3 text-center relative pb-8 pt-8">
                     <motion.button
@@ -33,7 +38,7 @@ export function LoginForm({
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x h-5 w-5"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                         <span className="sr-only">Cerrar</span>
                     </motion.button>
-                    <CardTitle className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
+                    <CardTitle className="text-4xl font-bold tracking-tight bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
                         Bienvenido
                     </CardTitle>
                     <CardDescription className="text-white/60 text-base font-normal">
@@ -52,6 +57,8 @@ export function LoginForm({
                             type="email"
                             placeholder="usuario@ejemplo.com"
                             required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
                         />
                     </div>
@@ -69,19 +76,23 @@ export function LoginForm({
                         <Input
                             id="password"
                             type="password"
+                            placeholder="********"
                             required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="bg-white/5 border border-white/10 text-white focus:border-[#009B77]/60 focus:ring-[#009B77]/20 focus:bg-white/10 transition-all duration-300 h-12 rounded-2xl text-sm backdrop-blur-sm"
                         />
                     </div>
 
                     {/* Botón Login */}
                     <motion.button
-                        className="w-full rounded-2xl h-12 bg-gradient-to-r from-[#009B77] to-[#00b388] hover:from-[#00b388] hover:to-[#009B77] text-[#121212] font-bold text-base shadow-xl shadow-[#009B77]/20 hover:shadow-[#009B77]/40 transition-all duration-300 relative overflow-hidden group mt-2"
+                        className="w-full rounded-2xl h-12 bg-linear-to-r from-[#009B77] to-[#00b388] hover:from-[#00b388] hover:to-[#009B77] text-[#121212] font-bold text-base shadow-xl shadow-[#009B77]/20 hover:shadow-[#009B77]/40 transition-all duration-300 relative overflow-hidden group mt-2"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={() => onLogin({ email, password })}
                         type="submit"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-linear-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <span className="relative">Iniciar Sesión</span>
                     </motion.button>
 

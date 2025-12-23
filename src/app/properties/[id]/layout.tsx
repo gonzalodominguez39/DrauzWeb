@@ -11,8 +11,8 @@ function Layout({ children }: { children: ReactNode }) {
     const { authView, onLoginClick, onSignupClick, onCloseClick } = useLogin()
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col bg-[#121212]">
-            <Header onLoginClick={onLoginClick} />
+        <div >
+            <Header onLoginClick={onLoginClick} isSticky={false} />
             {children}
             {authView && (
                 <Login

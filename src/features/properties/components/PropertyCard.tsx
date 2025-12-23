@@ -6,12 +6,14 @@ import { Property } from '../types/property.types';
 import { PropertyBadge } from './PropertyBadge';
 import { HeartIcon, HomeIcon, BathroomIcon, AreaIcon } from '@/shared/components/icons/icons';
 import { formatPrice } from '@/shared/utils/formatters';
+import { useCartStore } from '@/shared/stores/useCartStore';
 
 interface PropertyCardProps {
   property: Property;
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
+  const { addItem, removeItem, isInCart } = useCartStore();
   return (
     <Link href={`/properties/${property.id}`} className="block group">
       <div className="flex flex-col bg-[#212121] rounded-xl overflow-hidden border border-white/10 shadow-lg group-hover:border-[#009B77] transition-all duration-300">
@@ -23,18 +25,27 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           {property.badge && <PropertyBadge badge={property.badge} />}
-          <button 
+          <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              // TODO: Implementar favoritos
+              if (isInCart(property.id)) {
+                removeItem(property.id);
+              } else {
+                addItem(property);
+              }
             }}
-            className="absolute top-3 right-3 bg-[#212121]/50 p-2 rounded-full text-white hover:text-[#009B77] hover:bg-[#212121] transition-colors"
+            className="absolute top-3 right-3 p-2 rounded-full bg-[#212121]/50 backdrop-blur-sm hover:bg-[#212121]/80 transition-all duration-300"
           >
-            <HeartIcon />
+            <HeartIcon
+              className={`w-6 h-6 transition-all  cursor-pointer duration-300 ${isInCart(property.id)
+                ? 'text-[#009B77] fill-[#009B77]'
+                : 'text-white hover:text-[#009B77]'
+                }`}
+            />
           </button>
         </div>
-        
+
         <div className="p-5 flex flex-col flex-1">
           <div className="flex-1">
             <p className="text-2xl font-bold text-[#009B77] mb-1">
@@ -43,7 +54,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <h4 className="text-xl font-bold text-white mb-2 group-hover:text-[#009B77] transition-colors">{property.title}</h4>
             <p className="text-sm text-white/70 mb-4">{property.location}</p>
           </div>
-          
+
           <div className="flex items-center gap-4 text-white/80 border-t border-white/10 pt-4 mt-auto text-sm">
             <span className="flex items-center gap-2">
               <HomeIcon />

@@ -5,6 +5,9 @@ import drauzLogo from '@/assets/images/logo_drauz.png';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { useAuthStore } from "@/features/login/store/useAuthStore";
+import { FaShoppingCart } from "react-icons/fa";
 
 
 const NAV_ITEMS = [
@@ -39,8 +42,10 @@ const itemVariants = {
   },
 };
 
-export const Header = ({ onLoginClick }: { onLoginClick?: () => void }) => {
+export const Header = ({ onLoginClick, isSticky = true }: { onLoginClick?: () => void; isSticky?: boolean }) => {
   const router = useRouter();
+  const { items } = useCartStore();
+  const { isAuthenticated, user, logout, onLoginClick: storeOnLoginClick } = useAuthStore();
   return (
     <motion.header
       initial={{ y: -100, opacity: 0 }}
@@ -51,7 +56,7 @@ export const Header = ({ onLoginClick }: { onLoginClick?: () => void }) => {
         damping: 20,
         duration: 0.8,
       }}
-      className="sticky top-0 z-40 backdrop-blur-sm bg-gradient-to-b from-black/40 via-black/20 to-transparent"
+      className={`${isSticky ? 'sticky top-0' : 'relative'} z-40 backdrop-blur-sm bg-linear-to-b from-black/40 via-black/20 to-transparent`}
     >
       <div className="container mx-auto">
         <motion.div
@@ -73,7 +78,7 @@ export const Header = ({ onLoginClick }: { onLoginClick?: () => void }) => {
             {/* Company Name */}
             <motion.h2
               variants={itemVariants}
-              className="text-white text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] flex-1 bg-gradient-to-r from-white via-[#009B77] to-white bg-clip-text text-transparent"
+              className="text-white text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] flex-1 bg-linear-to-r from-white via-[#009B77] to-white bg-clip-text text-transparent"
             >
               {COMPANY_INFO.name}
             </motion.h2>
@@ -102,7 +107,7 @@ export const Header = ({ onLoginClick }: { onLoginClick?: () => void }) => {
                   >
                     {item.label}
                     {/* Animated underline - expands from center */}
-                    <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#009B77] to-[#00b388] rounded-full origin-center scale-x-0 group-hover:scale-x-100 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out" />
+                    <span className="absolute bottom-0 left-0 w-full h-1 bg-linear-to-r from-[#009B77] to-[#00b388] rounded-full origin-center scale-x-0 group-hover:scale-x-100 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out" />
                     {/* Glow effect */}
                     <span className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 blur-xl bg-[#009B77]/20 transition-opacity duration-300" />
                   </motion.a>
@@ -116,17 +121,55 @@ export const Header = ({ onLoginClick }: { onLoginClick?: () => void }) => {
             variants={itemVariants}
             className="flex flex-1 items-center justify-end md:flex-none md:justify-self-end"
           >
+
+
+            {isAuthenticated ? (
+              <motion.div className="flex items-center gap-4 mr-4">
+                <span className="text-white/80 hidden md:block text-sm font-medium">
+                  {user?.email}
+                </span>
+                <motion.button
+                  className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 text-base font-bold leading-normal tracking-[0.015em] transition-all"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    logout();
+                    router.push('/');
+                  }}
+                >
+                  <span className="truncate">Salir</span>
+                </motion.button>
+              </motion.div>
+            ) : (
+              <motion.button
+                className="flex min-w-[100px] cursor-pointer items-center justify-center mr-4 overflow-hidden rounded-lg h-12 px-6 bg-linear-to-r from-[#009B77] to-[#00b388] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-[#009B77]/30"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: '0 0 25px rgba(0, 155, 119, 0.6)',
+                  transition: { duration: 0.2 },
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onLoginClick || storeOnLoginClick}
+              >
+                <span className="truncate">Iniciar Sesión</span>
+              </motion.button>
+            )}
+
             <motion.button
-              className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-gradient-to-r from-[#009B77] to-[#00b388] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-[#009B77]/30"
+              className="flex cursor-pointer items-center hover:scale-105 justify-center overflow-visible text-white text-base font-bold relative"
               whileHover={{
                 scale: 1.05,
-                boxShadow: '0 0 25px rgba(0, 155, 119, 0.6)',
                 transition: { duration: 0.2 },
               }}
               whileTap={{ scale: 0.95 }}
               onClick={onLoginClick}
             >
-              <span className="truncate">Iniciar Sesión</span>
+              <FaShoppingCart size={20} />
+              {items.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-linear-to-r from-[#009B77] to-[#00b388] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {items.length}
+                </span>
+              )}
             </motion.button>
           </motion.div>
         </motion.div>

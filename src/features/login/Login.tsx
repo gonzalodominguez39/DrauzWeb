@@ -1,18 +1,14 @@
 import { AnimatePresence, motion } from 'motion/react'
-import React, { useState } from 'react'
 import { LoginForm } from './components/LoginForm'
 import { SignupForm } from './components/SignUp'
-import useLogin from './hooks/useLogin'
+import { useAuthStore } from './store/useAuthStore';
+
 
 type LoginProps = {
     authView: "login" | "signup" | "none";
-    onCloseClick: () => void;
-    onLoginClick: () => void;
-    onSignupClick: () => void;
 }
-const Login = ({ authView, onCloseClick, onLoginClick, onSignupClick }: LoginProps) => {
-
-
+const Login = ({ authView }: LoginProps) => {
+    const { onCloseClick } = useAuthStore();
     return (
         <AnimatePresence mode="wait">
             {authView !== 'none' && (
@@ -33,14 +29,9 @@ const Login = ({ authView, onCloseClick, onLoginClick, onSignupClick }: LoginPro
                         className="w-full max-w-md"
                     >
                         {authView === 'login' ? (
-                            <LoginForm
-                                onSignupClick={onSignupClick}
-                                onCloseClick={onCloseClick}
-                            />
+                            <LoginForm />
                         ) : (
                             <SignupForm
-                                onLoginClick={onLoginClick}
-                                onCloseClick={onCloseClick}
                             />
                         )}
                     </motion.div>
