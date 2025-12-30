@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "../services/auth.service";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../store/useAuthStore";
+import { toast } from "sonner";
 
 interface LoginData {
   email: string;
@@ -9,25 +10,27 @@ interface LoginData {
 }
 
 export const useLoginAuth = () => {
+  const { onCloseClick } = useAuthStore();
   const router = useRouter();
   const { setUser } = useAuthStore();
   const loginMutation = useMutation({
     mutationFn: async (data: LoginData) => {
-      // Validaciones básicas
       if (!data.email || !data.password) {
         throw new Error("Email y contraseña son requeridos");
       }
 
-      // Llamada al servicio
       return authService.login(data);
     },
     onSuccess: (data) => {
       console.log("Login exitoso:", data);
       setUser(data);
+      toast.success("Login exitoso");
+      onCloseClick();
       router.push("/home");
     },
     onError: (error: Error) => {
       console.error("Error al iniciar sesión:", error.message);
+      toast.error("Error al iniciar sesión: credenciales incorrectas");
     },
   });
 

@@ -9,6 +9,7 @@ export async function signIn(req: Request) {
     const data = await AuthService.login(email, password);
     return Response.json(data, { status: 200 });
   } catch (e: any) {
+    console.log(e.status);
     return new Response(e.message, { status: 400 });
   }
 }
