@@ -40,7 +40,7 @@ export const HeroCarousel = () => {
     const currentProperty = heroProperties[currentIndex];
 
     return (
-        <section className="relative h-[90vh] min-h-[600px] overflow-hidden">
+        <section className="relative h-[90vh] min-h-[400px] md:min-h-[600px] overflow-hidden">
             {/* Background Images */}
             <AnimatePresence mode="wait">
                 <motion.div

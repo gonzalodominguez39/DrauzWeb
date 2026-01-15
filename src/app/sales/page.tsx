@@ -17,12 +17,16 @@ import { motion } from 'framer-motion';
 import { useAuthStore } from '@/features/login/store/useAuthStore';
 import Login from '@/features/login/Login';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function HomePage() {
-    const { filteredProperties, properties, currentType } = useFilterPropertiesStore();
+export default function SalesPage() {
+    const { filteredProperties, setSearchType, currentType } = useFilterPropertiesStore();
     const { authView } = useAuthStore();
     const [cartIsOpen, setCartIsOpen] = useState(false);
+
+    useEffect(() => {
+        setSearchType('venta');
+    }, [setSearchType]);
 
     const toggleCart = () => {
         setCartIsOpen(!cartIsOpen);
@@ -42,11 +46,11 @@ export default function HomePage() {
                         className="mb-8"
                     >
                         <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
-                            Encuentra tu hogar ideal
+                            Propiedades en Venta
                         </h1>
                         <p className="text-white/60 text-lg max-w-2xl">
-                            Explora las mejores propiedades disponibles en las zonas más exclusivas.
-                            Casas, departamentos y más, todo en un solo lugar.
+                            Descubre nuestra exclusiva selección de propiedades disponibles para la venta.
+                            Encuentra el hogar de tus sueños o tu próxima inversión.
                         </p>
                     </motion.div>
 
@@ -77,7 +81,7 @@ export default function HomePage() {
                         transition={{ duration: 0.5, delay: 0.3 }}
                         className="mb-12"
                     >
-                        <FeaturedCarousel properties={properties} />
+                        <FeaturedCarousel properties={filteredProperties} />
                     </motion.div>
 
                     {/* Divider */}
@@ -93,7 +97,7 @@ export default function HomePage() {
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                             <div>
                                 <h2 className="text-2xl font-bold text-white mb-1">
-                                    {currentType === 'venta' ? 'Propiedades en Venta' : 'Propiedades en Alquiler'}
+                                    Catálogo de Ventas
                                 </h2>
                                 <p className="text-white/50 text-sm">
                                     {filteredProperties.length} {filteredProperties.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
