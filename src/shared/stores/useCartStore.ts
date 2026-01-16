@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Property } from "@/features/properties/types/property.types";
+import { Property } from "@/features/properties/types/property";
 
 interface CartState {
   items: Property[];

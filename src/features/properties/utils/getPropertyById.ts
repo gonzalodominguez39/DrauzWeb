@@ -1,5 +1,5 @@
 import { allProperties } from '../data/mockProperties';
-import { Property } from '../types/property.types';
+import { Property } from '../types/property';
 
 export const getPropertyById = (id: string | number): Property | undefined => {
   const numId = typeof id === 'string' ? parseInt(id, 10) : id;

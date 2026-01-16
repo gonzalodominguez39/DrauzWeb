@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Property } from '@/features/properties/types/property.types';
+import { Property } from '@/features/properties/types/property';
 import { featuredProperties } from '@/features/properties/data/mockProperties';
 import { SearchBar } from '@/features/search/components/SearchBar';
 
@@ -40,7 +40,7 @@ export const HeroCarousel = () => {
     const currentProperty = heroProperties[currentIndex];
 
     return (
-        <section className="relative h-[90vh] min-h-[400px] md:min-h-[600px] overflow-hidden">
+        <section className="relative h-[150vh] min-h-[600px] md:min-h-[600px] overflow-hidden">
             {/* Background Images */}
             <AnimatePresence mode="wait">
                 <motion.div
@@ -65,7 +65,7 @@ export const HeroCarousel = () => {
             </AnimatePresence>
 
             {/* Content */}
-            <div className="relative h-full container mx-auto px-4 flex flex-col justify-center">
+            <div className="relative h-full container mx-auto px-4 flex flex-col justify-center pt-20 md:pt-24 lg:pt-28">
                 <div className="max-w-3xl">
                     {/* Property Badge */}
                     <AnimatePresence mode="wait">

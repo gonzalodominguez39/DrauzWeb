@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/shared/stores/useCartStore';
 import { useAuthStore } from "@/features/login/store/useAuthStore";
+import { useHeaderStyle } from '@/lib/hooks/useHeaderStyle';
 // ... imports
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import { useState, useEffect } from 'react';
@@ -17,7 +18,7 @@ const NAV_ITEMS = [
   { label: 'Venta', href: '/sales' },
   { label: 'Alquiler', href: '#' },
   { label: 'Proyectos', href: '#' },
-  { label: 'Nosotros', href: '#' },
+  { label: 'Nosotros', href: '/about-us' },
   { label: 'Contacto', href: '#' },
 ];
 
@@ -62,6 +63,7 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
   const { items } = useCartStore();
   const { isAuthenticated, user, logout, onLoginClick: storeOnLoginClick } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isScrolled = useHeaderStyle();
 
   // Close mobile menu when route changes or screen resizes
   useEffect(() => {
@@ -90,7 +92,11 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
         damping: 20,
         duration: 0.8,
       }}
-      className={`${isSticky ? 'sticky top-0' : 'relative'} z-40 backdrop-blur-sm bg-linear-to-b from-black/40 via-black/20 to-transparent`}
+      className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-md w-full transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-linear-to-b from-black/80 via-black/60 to-black/40 shadow-lg shadow-black/50' 
+          : 'bg-linear-to-b from-black/20 via-black/10 to-transparent'
+      }`}
     >
       <div className="container mx-auto">
         <motion.div

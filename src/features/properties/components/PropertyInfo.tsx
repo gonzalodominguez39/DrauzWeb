@@ -1,4 +1,4 @@
-import { Property } from '../types/property.types';
+import { Property } from '../types/property';
 import { PropertyBadge } from './PropertyBadge';
 import { HomeIcon, BathroomIcon, AreaIcon } from '@/shared/components/icons/icons';
 import { formatPrice } from '@/shared/utils/formatters';

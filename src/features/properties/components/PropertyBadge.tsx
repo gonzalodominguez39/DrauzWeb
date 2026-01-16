@@ -1,4 +1,4 @@
-import { PropertyBadge as PropertyBadgeType } from '../types/property.types';
+import { PropertyBadge as PropertyBadgeType } from '../types/property';
 
 interface PropertyBadgeProps {
   badge: PropertyBadgeType;

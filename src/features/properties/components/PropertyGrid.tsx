@@ -1,4 +1,4 @@
-import { Property } from '../types/property.types';
+import { Property } from '../types/property';
 import { PropertyCard } from './PropertyCard';
 
 interface PropertyGridProps {

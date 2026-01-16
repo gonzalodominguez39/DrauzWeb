@@ -9,7 +9,7 @@ export const THEME_COLORS = {
 } as const;
 
 export const COMPANY_INFO = {
-  name: 'Inmobiliaria Drauz',
+  name: 'Drauz',
   tagline: 'Tu socio de confianza en el sector inmobiliario de lujo.',
   address: 'Calle Serrano, 45, Madrid',
   phone: '+34 912 345 678',

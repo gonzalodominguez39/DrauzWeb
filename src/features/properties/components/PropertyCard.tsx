@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Property } from '../types/property.types';
+import { Property } from '../types/property';
 import { PropertyBadge } from './PropertyBadge';
 import { HeartIcon, HomeIcon, BathroomIcon, AreaIcon } from '@/shared/components/icons/icons';
 import { formatPrice } from '@/shared/utils/formatters';

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { featuredProperties } from "@/properties/data/mockProperties";
 import { SearchType } from "../types/search.types";
-import { Property } from "@/properties/types/property.types";
+import { Property } from "@/features/properties/types/property";
 
 export type SortOption =
   | "default"
@@ -25,6 +25,7 @@ interface FilterPropertiesState {
   sortBy: SortOption;
   quickFilters: QuickFilter[];
   priceRange: { min: number; max: number } | null;
+  onFilterActive: boolean;
 
   // Actions
   setSearchType: (type: SearchType) => void;
@@ -52,6 +53,17 @@ const defaultQuickFilters: QuickFilter[] = [
   { id: "opportunity", label: "Oportunidad", active: false },
 ];
 
+const isFilterActive = (
+  query: string,
+  quickFilters: QuickFilter[],
+  priceRange: { min: number; max: number } | null,
+  sortBy: SortOption
+) =>
+  !!query ||
+  !!priceRange ||
+  sortBy !== "default" ||
+  quickFilters.some((f) => f.active);
+
 const applyFilters = (
   properties: Property[],
   type: SearchType,
@@ -61,10 +73,8 @@ const applyFilters = (
   sortBy: SortOption
 ): Property[] => {
   let filtered = properties.filter((p) => {
-    // Type filter
     const matchesType = type === "venta" ? p.forSale : !p.forSale;
 
-    // Search query filter
     const matchesQuery =
       !query ||
       p.location.toLowerCase().includes(query.toLowerCase()) ||
@@ -72,34 +82,29 @@ const applyFilters = (
 
     if (!matchesType || !matchesQuery) return false;
 
-    // Quick filters
-    const activeFilters = quickFilters.filter((f) => f.active);
-    if (activeFilters.length > 0) {
-      for (const filter of activeFilters) {
-        switch (filter.id) {
-          case "1-bed":
-            if (p.bedrooms !== 1) return false;
-            break;
-          case "2-bed":
-            if (p.bedrooms < 2) return false;
-            break;
-          case "3-bed":
-            if (p.bedrooms < 3) return false;
-            break;
-          case "parking":
-            if (!p.parking || p.parking < 1) return false;
-            break;
-          case "new":
-            if (p.badge !== "NUEVA") return false;
-            break;
-          case "opportunity":
-            if (p.badge !== "OPORTUNIDAD") return false;
-            break;
-        }
+    for (const filter of quickFilters.filter((f) => f.active)) {
+      switch (filter.id) {
+        case "1-bed":
+          if (p.bedrooms !== 1) return false;
+          break;
+        case "2-bed":
+          if (p.bedrooms < 2) return false;
+          break;
+        case "3-bed":
+          if (p.bedrooms < 3) return false;
+          break;
+        case "parking":
+          if (!p.parking || p.parking < 1) return false;
+          break;
+        case "new":
+          if (p.badge !== "NUEVA") return false;
+          break;
+        case "opportunity":
+          if (p.badge !== "OPORTUNIDAD") return false;
+          break;
       }
     }
 
-    // Price range filter
     if (priceRange) {
       if (p.price < priceRange.min || p.price > priceRange.max) return false;
     }
@@ -107,7 +112,6 @@ const applyFilters = (
     return true;
   });
 
-  // Apply sorting
   switch (sortBy) {
     case "price-asc":
       filtered.sort((a, b) => a.price - b.price);
@@ -124,9 +128,6 @@ const applyFilters = (
     case "bedrooms":
       filtered.sort((a, b) => b.bedrooms - a.bedrooms);
       break;
-    default:
-      // Keep original order
-      break;
   }
 
   return filtered;
@@ -139,53 +140,85 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
     currentType: "venta",
     searchQuery: "",
     sortBy: "default",
-    quickFilters: defaultQuickFilters,
+    quickFilters: defaultQuickFilters.map((f) => ({ ...f })),
     priceRange: null,
+    onFilterActive: false,
 
     setSearchType: (type) =>
-      set((state) => ({
-        currentType: type,
-        filteredProperties: applyFilters(
+      set((state) => {
+        const filtered = applyFilters(
           state.properties,
           type,
           state.searchQuery,
           state.quickFilters,
           state.priceRange,
           state.sortBy
-        ),
-      })),
+        );
+
+        return {
+          currentType: type,
+          filteredProperties: filtered,
+          onFilterActive: isFilterActive(
+            state.searchQuery,
+            state.quickFilters,
+            state.priceRange,
+            state.sortBy
+          ),
+        };
+      }),
 
     setSearchQuery: (query) =>
-      set((state) => ({
-        searchQuery: query,
-        filteredProperties: applyFilters(
+      set((state) => {
+        const filtered = applyFilters(
           state.properties,
           state.currentType,
           query,
           state.quickFilters,
           state.priceRange,
           state.sortBy
-        ),
-      })),
+        );
+
+        return {
+          searchQuery: query,
+          filteredProperties: filtered,
+          onFilterActive: isFilterActive(
+            query,
+            state.quickFilters,
+            state.priceRange,
+            state.sortBy
+          ),
+        };
+      }),
 
     setSortBy: (sort) =>
-      set((state) => ({
-        sortBy: sort,
-        filteredProperties: applyFilters(
+      set((state) => {
+        const filtered = applyFilters(
           state.properties,
           state.currentType,
           state.searchQuery,
           state.quickFilters,
           state.priceRange,
           sort
-        ),
-      })),
+        );
+
+        return {
+          sortBy: sort,
+          filteredProperties: filtered,
+          onFilterActive: isFilterActive(
+            state.searchQuery,
+            state.quickFilters,
+            state.priceRange,
+            sort
+          ),
+        };
+      }),
 
     toggleQuickFilter: (filterId) =>
       set((state) => {
         const newFilters = state.quickFilters.map((f) =>
           f.id === filterId ? { ...f, active: !f.active } : f
         );
+
         return {
           quickFilters: newFilters,
           filteredProperties: applyFilters(
@@ -196,30 +229,50 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
             state.priceRange,
             state.sortBy
           ),
+          onFilterActive: isFilterActive(
+            state.searchQuery,
+            newFilters,
+            state.priceRange,
+            state.sortBy
+          ),
         };
       }),
 
     setPriceRange: (range) =>
-      set((state) => ({
-        priceRange: range,
-        filteredProperties: applyFilters(
+      set((state) => {
+        const filtered = applyFilters(
           state.properties,
           state.currentType,
           state.searchQuery,
           state.quickFilters,
           range,
           state.sortBy
-        ),
-      })),
+        );
+
+        return {
+          priceRange: range,
+          filteredProperties: filtered,
+          onFilterActive: isFilterActive(
+            state.searchQuery,
+            state.quickFilters,
+            range,
+            state.sortBy
+          ),
+        };
+      }),
 
     reset: () =>
       set((state) => ({
         currentType: "venta",
         searchQuery: "",
         sortBy: "default",
-        quickFilters: defaultQuickFilters,
+        quickFilters: defaultQuickFilters.map((f) => ({
+          ...f,
+          active: false,
+        })),
         priceRange: null,
         filteredProperties: state.properties.filter((p) => p.forSale),
+        onFilterActive: false,
       })),
 
     getStats: () => {
@@ -231,6 +284,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           ? state.filteredProperties.reduce((acc, p) => acc + p.price, 0) /
             state.filteredProperties.length
           : 0;
+
       return {
         total: state.properties.length,
         forSale,
