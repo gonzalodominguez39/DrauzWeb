@@ -55,10 +55,12 @@ const defaultQuickFilters: QuickFilter[] = [
 
 const isFilterActive = (
   query: string,
+  type: SearchType,
   quickFilters: QuickFilter[],
   priceRange: { min: number; max: number } | null,
   sortBy: SortOption
 ) =>
+  type !== "top" ||
   !!query ||
   !!priceRange ||
   sortBy !== "default" ||
@@ -72,8 +74,14 @@ const applyFilters = (
   priceRange: { min: number; max: number } | null,
   sortBy: SortOption
 ): Property[] => {
-  let filtered = properties.filter((p) => {
-    const matchesType = type === "venta" ? p.forSale : !p.forSale;
+
+  const filtered = properties.filter((p) => {
+    const matchesType =
+      type === "top"
+        ? true
+        : type === "venta"
+        ? p.forSale
+        : !p.forSale;
 
     const matchesQuery =
       !query ||
@@ -136,8 +144,8 @@ const applyFilters = (
 export const useFilterPropertiesStore = create<FilterPropertiesState>(
   (set, get) => ({
     properties: featuredProperties,
-    filteredProperties: featuredProperties.filter((p) => p.forSale),
-    currentType: "venta",
+    filteredProperties: featuredProperties,
+    currentType: "top",
     searchQuery: "",
     sortBy: "default",
     quickFilters: defaultQuickFilters.map((f) => ({ ...f })),
@@ -160,6 +168,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           filteredProperties: filtered,
           onFilterActive: isFilterActive(
             state.searchQuery,
+            type,
             state.quickFilters,
             state.priceRange,
             state.sortBy
@@ -183,6 +192,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           filteredProperties: filtered,
           onFilterActive: isFilterActive(
             query,
+            state.currentType,
             state.quickFilters,
             state.priceRange,
             state.sortBy
@@ -206,6 +216,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           filteredProperties: filtered,
           onFilterActive: isFilterActive(
             state.searchQuery,
+            state.currentType,
             state.quickFilters,
             state.priceRange,
             sort
@@ -231,6 +242,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           ),
           onFilterActive: isFilterActive(
             state.searchQuery,
+            state.currentType,
             newFilters,
             state.priceRange,
             state.sortBy
@@ -254,6 +266,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           filteredProperties: filtered,
           onFilterActive: isFilterActive(
             state.searchQuery,
+            state.currentType,
             state.quickFilters,
             range,
             state.sortBy
@@ -263,7 +276,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
 
     reset: () =>
       set((state) => ({
-        currentType: "venta",
+        currentType: "top",
         searchQuery: "",
         sortBy: "default",
         quickFilters: defaultQuickFilters.map((f) => ({
@@ -271,7 +284,7 @@ export const useFilterPropertiesStore = create<FilterPropertiesState>(
           active: false,
         })),
         priceRange: null,
-        filteredProperties: state.properties.filter((p) => p.forSale),
+        filteredProperties: state.properties,
         onFilterActive: false,
       })),
 

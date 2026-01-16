@@ -1,30 +1,26 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { featuredProperties } from '@/features/properties/data/mockProperties'
-import type { Property } from '@/features/properties/types/property'
 import { useFilterPropertiesStore } from '@/features/search/hooks/useFilterPropertiesStore'
+import { HeartIcon } from '@/shared/components/icons/icons'
+import { useCartStore } from '@/shared/stores/useCartStore'
 
 export const FeaturedSection = () => {
-  const [renderProperties, setRenderProperties] = useState<Property[] | null>(
-    null
-  )
- const topProperties = useMemo(() => {
-  return [...featuredProperties]
-    .sort((a, b) => b.price - a.price)
-    .slice(0, 6)
-}, [])
+
+  const topProperties = useMemo(() => {
+    return [...featuredProperties]
+      .filter(p => p.forSale)
+      .sort((a, b) => b.price - a.price)
+      .slice(0, 6)
+  }, [])
+
   const { filteredProperties, onFilterActive } = useFilterPropertiesStore()
-  useEffect(() => {
-    console.log('onFilterActive:', onFilterActive)
-    if (onFilterActive) {
-      setRenderProperties(filteredProperties)
-    } else {
-      setRenderProperties(topProperties)
-    }
-  }, [filteredProperties, onFilterActive, topProperties])
+  const { addItem, removeItem, isInCart } = useCartStore()
+  
+  const renderProperties = onFilterActive ? filteredProperties : topProperties
 
   return (
     <section className='bg-[#121212] py-20 px-4'>
@@ -37,20 +33,22 @@ export const FeaturedSection = () => {
           transition={{ duration: 0.5 }}
           className='text-center mb-12'>
           <span className='inline-block px-4 py-1.5 rounded-full bg-[#009B77]/10 text-[#009B77] text-sm font-medium mb-4'>
-            Propiedades Premium
+            {onFilterActive ? `Propiedades Encontradas (${renderProperties.length})` : 'Propiedades Premium'}
           </span>
           <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4'>
-            Propiedades Destacadas
+            {onFilterActive ? 'Resultados de Búsqueda' : 'Propiedades Destacadas'}
           </h2>
           <p className='text-white/60 text-lg max-w-2xl mx-auto'>
-            Descubre nuestras propiedades más exclusivas con el mayor valor del
-            mercado
+            {onFilterActive 
+              ? `Se encontraron ${renderProperties.length} propiedades que coinciden con tu búsqueda`
+              : 'Descubre nuestras propiedades más exclusivas con el mayor valor del mercado'
+            }
           </p>
         </motion.div>
 
         {/* Property Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12'>
-          {renderProperties?.map((property, index) => (
+          {renderProperties.map((property, index) => (
             <motion.div
               key={property.id}
               initial={{ opacity: 0, y: 30 }}
@@ -73,15 +71,14 @@ export const FeaturedSection = () => {
                     {property.badge && (
                       <div className='absolute top-4 left-4'>
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                            property.badge === 'NUEVA'
+                          className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${property.badge === 'NUEVA'
                               ? 'bg-[#009B77] text-white'
                               : property.badge === 'OPORTUNIDAD'
-                              ? 'bg-amber-500 text-black'
-                              : property.badge === 'EXCLUSIVA'
-                              ? 'bg-purple-500 text-white'
-                              : 'bg-red-500 text-white'
-                          }`}>
+                                ? 'bg-amber-500 text-black'
+                                : property.badge === 'EXCLUSIVA'
+                                  ? 'bg-purple-500 text-white'
+                                  : 'bg-red-500 text-white'
+                            }`}>
                           {property.badge}
                         </span>
                       </div>
@@ -93,6 +90,27 @@ export const FeaturedSection = () => {
                         {property.forSale ? 'Venta' : 'Alquiler'}
                       </span>
                     </div>
+
+                    {/* Heart Button */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        if (isInCart(property.id)) {
+                          removeItem(property.id)
+                        } else {
+                          addItem(property)
+                        }
+                      }}
+                      className='absolute bottom-4 right-4 p-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all duration-300 z-10'
+                    >
+                      <HeartIcon
+                        className={`w-5 h-5 transition-all cursor-pointer duration-300 ${isInCart(property.id)
+                          ? 'text-[#009B77] fill-[#009B77]'
+                          : 'text-white hover:text-[#009B77]'
+                          }`}
+                      />
+                    </button>
 
                     {/* Price */}
                     <div className='absolute bottom-4 left-4'>

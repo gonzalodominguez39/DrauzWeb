@@ -1,6 +1,6 @@
 'use client';
 
-import { Header } from '@/shared/components/layout/Header';
+import { Header } from '@/shared/components/layout/header/Header';
 import { Footer } from '@/shared/components/layout/Footer';
 
 import { PropertyGrid } from '@/features/properties/components/PropertyGrid';

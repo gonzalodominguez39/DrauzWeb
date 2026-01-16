@@ -14,6 +14,7 @@ interface PropertyCardProps {
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   const { addItem, removeItem, isInCart } = useCartStore();
+
   return (
     <Link href={`/properties/${property.id}`} className="block group">
       <div className="flex flex-col bg-[#212121] rounded-xl overflow-hidden border border-white/10 shadow-lg group-hover:border-[#009B77] transition-all duration-300">

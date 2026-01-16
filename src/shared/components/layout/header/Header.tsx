@@ -11,7 +11,8 @@ import { useHeaderStyle } from '@/lib/hooks/useHeaderStyle';
 // ... imports
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import { useState, useEffect } from 'react';
-import { CartDrawer } from '../cart/CartDrawer';
+import { CartDrawer } from '../../cart/CartDrawer';
+
 
 
 const NAV_ITEMS = [
@@ -60,12 +61,13 @@ type headerProps = {
 
 export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }: headerProps) => {
   const router = useRouter();
+
   const { items } = useCartStore();
   const { isAuthenticated, user, logout, onLoginClick: storeOnLoginClick } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isScrolled = useHeaderStyle();
 
-  // Close mobile menu when route changes or screen resizes
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -92,11 +94,10 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
         damping: 20,
         duration: 0.8,
       }}
-      className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-md w-full transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-linear-to-b from-black/80 via-black/60 to-black/40 shadow-lg shadow-black/50' 
-          : 'bg-linear-to-b from-black/20 via-black/10 to-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-md w-full transition-all duration-250 ease-in-out ${isScrolled
+        ? 'bg-linear-to-b from-black/80 via-black/60 to-black/40 shadow-lg shadow-black/50'
+        : 'bg-linear-to-b from-black/20 via-black/10 to-transparent'
+        }`}
     >
       <div className="container mx-auto">
         <motion.div

@@ -3,7 +3,7 @@
 import Login from '@/features/login/Login'
 import { useAuthStore } from '@/features/login/store/useAuthStore'
 import { Footer } from '@/shared/components/layout/Footer'
-import { Header } from '@/shared/components/layout/Header'
+import { Header } from '@/shared/components/layout/header/Header'
 import { ReactNode } from 'react'
 import { useState } from 'react'
 

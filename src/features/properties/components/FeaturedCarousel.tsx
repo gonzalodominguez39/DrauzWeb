@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Property } from '../types/property';
+import { HeartIcon } from '@/shared/components/icons/icons';
+import { useCartStore } from '@/shared/stores/useCartStore';
 
 interface FeaturedCarouselProps {
     properties: Property[];
@@ -14,6 +16,7 @@ export const FeaturedCarousel = ({ properties }: FeaturedCarouselProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
+    const { addItem, removeItem, isInCart } = useCartStore();
 
     // Filter only featured properties (with badges)
     const featured = properties.filter(p => p.badge);
@@ -104,6 +107,27 @@ export const FeaturedCarousel = ({ properties }: FeaturedCarouselProps) => {
 
                                 {/* Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+                                {/* Heart Button */}
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        if (isInCart(property.id)) {
+                                            removeItem(property.id);
+                                        } else {
+                                            addItem(property);
+                                        }
+                                    }}
+                                    className="absolute top-4 right-4 p-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all duration-300 z-10"
+                                >
+                                    <HeartIcon
+                                        className={`w-6 h-6 transition-all cursor-pointer duration-300 ${isInCart(property.id)
+                                            ? 'text-[#009B77] fill-[#009B77]'
+                                            : 'text-white hover:text-[#009B77]'
+                                            }`}
+                                    />
+                                </button>
 
                                 {/* Badge */}
                                 <div className="absolute top-4 left-4">

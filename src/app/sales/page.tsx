@@ -1,6 +1,6 @@
 'use client';
 
-import { Header } from '@/shared/components/layout/Header';
+import { Header } from '@/shared/components/layout/header/Header';
 import { Footer } from '@/shared/components/layout/Footer';
 
 import { PropertyGrid } from '@/features/properties/components/PropertyGrid';
@@ -35,9 +35,9 @@ export default function SalesPage() {
     return (
         <>
             <div className="bg-[#121212] min-h-screen">
-                <Header isSticky={true} isCartOpen={cartIsOpen} toggleCart={toggleCart} />
+        
 
-                <main className="pt-24 pb-16 px-4 container mx-auto">
+                <main className="pt-24 mt-10 pb-16 px-4 container mx-auto">
                     {/* Hero Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

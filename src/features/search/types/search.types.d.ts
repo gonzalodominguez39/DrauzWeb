@@ -1,4 +1,4 @@
-export type SearchType = 'venta' | 'alquiler';
+export type SearchType = "venta" | "alquiler" | "top";
 
 export interface SearchFilters {
   type: SearchType;
@@ -9,4 +9,6 @@ export interface SearchFilters {
   bathrooms?: number;
   minArea?: number;
   maxArea?: number;
+  forRent?: boolean;
+  forSale?: boolean;
 }
