@@ -1,4 +1,3 @@
-'use client';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPropertyById } from '@/features/properties/utils/getPropertyById';
@@ -7,15 +6,14 @@ import { PropertyInfo } from '@/features/properties/components/PropertyInfo';
 import { PropertyFeatures } from '@/features/properties/components/PropertyFeatures';
 import { PropertyContact } from '@/features/properties/components/PropertyContact';
 
-
 interface PropertyPageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
-export default async function PropertyPage({ params }: PropertyPageProps) {
-  const { id } = await params;
+export default function PropertyPage({ params }: PropertyPageProps) {
+  const { id } = params;
   const property = getPropertyById(id);
 
 
