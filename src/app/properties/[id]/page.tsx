@@ -36,12 +36,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             Volver al listado
           </Link>
 
-          {/* Galería */}
-          {property.gallery && property.gallery.length > 0 && (
-            <div className="mb-8">
-              <PropertyGallery images={property.gallery} alt={property.title} />
-            </div>
-          )}
+           {/* Galería */}
+           <div className="mb-8">
+             <PropertyGallery
+               images={property.gallery}
+               alt={property.title}
+               fallbackImage={property.image}
+             />
+           </div>
 
           {/* Layout de 2 columnas */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
