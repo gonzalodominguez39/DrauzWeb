@@ -7,13 +7,13 @@ import { PropertyFeatures } from '@/features/properties/components/PropertyFeatu
 import { PropertyContact } from '@/features/properties/components/PropertyContact';
 
 interface PropertyPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function PropertyPage({ params }: PropertyPageProps) {
-  const { id } = params;
+export default async function PropertyPage({ params }: PropertyPageProps) {
+  const { id } = await params;
   const property = getPropertyById(id);
 
 
