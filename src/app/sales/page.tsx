@@ -1,8 +1,5 @@
 'use client';
 
-import { Header } from '@/shared/components/layout/header/Header';
-import { Footer } from '@/shared/components/layout/Footer';
-
 import { PropertyGrid } from '@/features/properties/components/PropertyGrid';
 import { PropertyStats } from '@/features/properties/components/PropertyStats';
 import { FeaturedCarousel } from '@/features/properties/components/FeaturedCarousel';
@@ -11,122 +8,103 @@ import { SearchBar } from '@/features/search/components/SearchBar';
 import { QuickFilters } from '@/features/search/components/QuickFilters';
 import { SortDropdown } from '@/features/search/components/SortDropdown';
 import { useFilterPropertiesStore } from '@/features/search/hooks/useFilterPropertiesStore';
-import { ButtonWpp } from '@/shared/components/layout/ButtonWpp';
 
 import { motion } from 'framer-motion';
-import { useAuthStore } from '@/features/login/store/useAuthStore';
-import Login from '@/features/login/Login';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function SalesPage() {
-    const { filteredProperties, setSearchType, currentType } = useFilterPropertiesStore();
-    const { authView } = useAuthStore();
-    const [cartIsOpen, setCartIsOpen] = useState(false);
+    const { filteredProperties, setSearchType } = useFilterPropertiesStore();
 
     useEffect(() => {
         setSearchType('venta');
     }, [setSearchType]);
 
-    const toggleCart = () => {
-        setCartIsOpen(!cartIsOpen);
-    };
-
     return (
-        <>
-            <div className="bg-[#121212] min-h-screen">
-        
+        <div className="bg-[#121212] min-h-screen">
+            <main className="pt-24 mt-10 pb-16 px-4 container mx-auto">
+                {/* Hero Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-8"
+                >
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
+                        Propiedades en Venta
+                    </h1>
+                    <p className="text-white/60 text-lg max-w-2xl">
+                        Descubre nuestra exclusiva selección de propiedades disponibles para la venta.
+                        Encuentra el hogar de tus sueños o tu próxima inversión.
+                    </p>
+                </motion.div>
 
-                <main className="pt-24 mt-10 pb-16 px-4 container mx-auto">
-                    {/* Hero Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="mb-8"
-                    >
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
-                            Propiedades en Venta
-                        </h1>
-                        <p className="text-white/60 text-lg max-w-2xl">
-                            Descubre nuestra exclusiva selección de propiedades disponibles para la venta.
-                            Encuentra el hogar de tus sueños o tu próxima inversión.
-                        </p>
-                    </motion.div>
+                {/* Search Bar */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="mb-8"
+                >
+                    <SearchBar />
+                </motion.div>
 
-                    {/* Search Bar */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                        className="mb-8"
-                    >
-                        <SearchBar />
-                    </motion.div>
+                {/* Stats Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mb-10"
+                >
+                    <PropertyStats />
+                </motion.div>
 
-                    {/* Stats Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        className="mb-10"
-                    >
-                        <PropertyStats />
-                    </motion.div>
+                {/* Featured Carousel */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mb-12"
+                >
+                    <FeaturedCarousel properties={filteredProperties} />
+                </motion.div>
 
-                    {/* Featured Carousel */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                        className="mb-12"
-                    >
-                        <FeaturedCarousel properties={filteredProperties} />
-                    </motion.div>
+                {/* Divider */}
+                <div className="border-t border-white/10 my-10" />
 
-                    {/* Divider */}
-                    <div className="border-t border-white/10 my-10" />
-
-                    {/* All Properties Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                    >
-                        {/* Section Header */}
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold text-white mb-1">
-                                    Catálogo de Ventas
-                                </h2>
-                                <p className="text-white/50 text-sm">
-                                    {filteredProperties.length} {filteredProperties.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
-                                </p>
-                            </div>
-
-                            <SortDropdown />
+                {/* All Properties Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                    {/* Section Header */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 className="text-2xl font-bold text-white mb-1">
+                                Catálogo de Ventas
+                            </h2>
+                            <p className="text-white/50 text-sm">
+                                {filteredProperties.length} {filteredProperties.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+                            </p>
                         </div>
 
-                        {/* Quick Filters */}
-                        <div className="mb-6">
-                            <QuickFilters />
-                        </div>
+                        <SortDropdown />
+                    </div>
 
-                        {/* Property Grid or Empty State */}
-                        {filteredProperties.length > 0 ? (
-                            <PropertyGrid properties={filteredProperties} />
-                        ) : (
-                            <EmptyState />
-                        )}
-                    </motion.div>
-                </main>
+                    {/* Quick Filters */}
+                    <div className="mb-6">
+                        <QuickFilters />
+                    </div>
 
-                <div className="flex flex-col right-4 z-50">
-                    {!cartIsOpen && <ButtonWpp />}
-                </div>
-                <Footer />
-                {authView !== 'none' && <Login authView={authView} />}
-            </div>
-        </>
+                    {/* Property Grid or Empty State */}
+                    {filteredProperties.length > 0 ? (
+                        <PropertyGrid properties={filteredProperties} />
+                    ) : (
+                        <EmptyState />
+                    )}
+                </motion.div>
+            </main>
+        </div>
     );
 }

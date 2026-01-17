@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   { label: 'Alquiler', href: '#' },
   { label: 'Proyectos', href: '#' },
   { label: 'Nosotros', href: '/about-us' },
-  { label: 'Contacto', href: '#' },
+  { label: 'Contacto', href: '/contact' },
 ];
 
 const containerVariants = {
@@ -136,6 +136,12 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
                   <motion.a
                     key={item.label}
                     href={item.href}
+                    onClick={(e) => {
+                      if (typeof item.href === 'string' && item.href.startsWith('/')) {
+                        e.preventDefault();
+                        router.push(item.href);
+                      }
+                    }}
                     className="relative text-base font-bold text-white/70 hover:text-white transition-colors group pb-2"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -258,7 +264,11 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
                   key={item.label}
                   href={item.href}
                   className="text-xl font-bold text-white hover:text-[#009B77] transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    if (typeof item.href === 'string' && item.href.startsWith('/')) router.push(item.href);
+                  }}
                 >
                   {item.label}
                 </a>
