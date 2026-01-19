@@ -17,7 +17,7 @@ import { CartDrawer } from '../../cart/CartDrawer';
 
 const NAV_ITEMS = [
   { label: 'Venta', href: '/sales' },
-  { label: 'Alquiler', href: '#' },
+   { label: 'Alquiler', href: '/rentals' },
   { label: 'Proyectos', href: '#' },
   { label: 'Nosotros', href: '/about-us' },
   { label: 'Contacto', href: '/contact' },

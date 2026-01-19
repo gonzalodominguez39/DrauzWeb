@@ -1,16 +1,12 @@
-// app/providers.tsx
+// app/properties/[id]/layout.tsx
 'use client'
-import { Footer } from '@/shared/components/layout/Footer'
 
 import { ReactNode } from 'react'
 
-
 function Layout({ children }: { children: ReactNode }) {
-  
     return (
-        <div >    
+        <div>
             {children}
-            <Footer />
         </div>
     )
 }
