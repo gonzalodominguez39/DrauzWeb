@@ -91,7 +91,7 @@ export const PropertyStats = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1, duration: 0.5 }}
                     className={`relative overflow-hidden rounded-2xl p-4 ${stat.highlight
-                            ? 'bg-gradient-to-br from-[#009B77]/20 to-[#009B77]/5 border border-[#009B77]/30'
+                            ? 'bg-linear-to-br from-[#009B77]/20 to-[#009B77]/5 border border-[#009B77]/30'
                             : 'bg-white/5 border border-white/10'
                         }`}
                 >

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FiMapPin, FiShield, FiClock, FiShoppingBag } from 'react-icons/fi';
+import { FaLightbulb } from 'react-icons/fa';
 
 interface NeighborhoodInsightsProps {
     location: string;
@@ -127,8 +128,9 @@ export const NeighborhoodInsights = ({ location }: NeighborhoodInsightsProps) =>
                 transition={{ delay: 0.5 }}
                 className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg"
             >
-                <p className="text-blue-300 text-xs text-center">
-                    💡 Puntaje promedio: {(Object.values(insights).reduce((acc, curr) => acc + curr.score, 0) / 4).toFixed(1)}
+                <p className="text-blue-300 text-xs text-center flex items-center justify-center gap-1">
+                    <FaLightbulb className="text-blue-400" />
+                    Puntaje promedio: {(Object.values(insights).reduce((acc, curr) => acc + curr.score, 0) / 4).toFixed(1)}
                 </p>
             </motion.div>
         </div>

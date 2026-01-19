@@ -1,3 +1,5 @@
+import { FaHome, FaMoneyBillWave, FaKey, FaChartBar, FaShieldAlt, FaHandshake } from 'react-icons/fa';
+
 export const aboutData = {
   company: {
     title: "Sobre Drauz",
@@ -8,32 +10,32 @@ export const aboutData = {
   
   services: [
     {
-      icon: "🏠",
+      icon: FaHome,
       title: "Compra de Propiedades",
       description: "Acceso a miles de propiedades verificadas con información detallada, fotos, videos y tours virtuales para encontrar tu hogar ideal."
     },
     {
-      icon: "💰",
+      icon: FaMoneyBillWave,
       title: "Venta de Propiedades",
       description: "Herramientas profesionales para publicar y promocionar tu propiedad. Conecta con compradores calificados en toda la región."
     },
     {
-      icon: "🔑",
+      icon: FaKey,
       title: "Alquileres",
       description: "Encuentra o publica propiedades en alquiler. Gestiona contratos, pagos y documentación de forma segura y digital."
     },
     {
-      icon: "📊",
+      icon: FaChartBar,
       title: "Análisis de Mercado",
       description: "Accede a datos actualizados sobre precios, tendencias y oportunidades de inversión inmobiliaria en tu zona."
     },
     {
-      icon: "🔒",
+      icon: FaShieldAlt,
       title: "Transacciones Seguras",
       description: "Plataforma segura con verificación de usuarios, depósito en garantía y respaldo legal en cada transacción."
     },
     {
-      icon: "🤝",
+      icon: FaHandshake,
       title: "Asesoramiento Personalizado",
       description: "Nuestro equipo de expertos está disponible para guiarte en cada paso del proceso de compra, venta o alquiler."
     }

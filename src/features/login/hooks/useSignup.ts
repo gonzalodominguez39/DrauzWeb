@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { authService, SignupRequest } from "../services/auth.service";
+import { authService } from "../services/auth.service";
+import { SignupRequest } from "@/shared/types/auth/auth";
 
 interface SignupData {
   email: string;

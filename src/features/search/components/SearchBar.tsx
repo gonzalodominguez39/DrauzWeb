@@ -18,8 +18,6 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
     onSearch?.(searchQuery, currentType);
   };
 
-
-  console.log(searchQuery);
   return (
     <div className="w-full max-w-4xl mt-6 p-4 bg-[#212121]/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10">
       <form onSubmit={handleSubmit}>
@@ -45,7 +43,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
       
             <button
               type="submit"
-              className="flex-1 md:flex-none flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#009B77] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#00b388] transition-colors"
+              className="flex-1 md:flex-none flex min-w-21 cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#009B77] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#00b388] transition-colors"
             >
               <span className="truncate">Buscar</span>
             </button>

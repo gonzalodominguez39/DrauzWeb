@@ -1,7 +1,7 @@
 'use client';
 
 import { PropertyGrid } from '@/features/properties/components/PropertyGrid';
-import { PropertyStats } from '@/features/properties/components/PropertyStats';
+
 import { FeaturedCarousel } from '@/features/properties/components/FeaturedCarousel';
 import { EmptyState } from '@/features/properties/components/EmptyState';
 import { SearchBar } from '@/features/search/components/SearchBar';
@@ -13,14 +13,11 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
 export default function RentalsPage() {
-    const { filteredProperties, setSearchType } = useFilterPropertiesStore();
+    const { filteredProperties, setSearchType, onFilterActive } = useFilterPropertiesStore();
 
     useEffect(() => {
         setSearchType('alquiler');
     }, [setSearchType]);
-
-    // Get rental-specific stats
-    const rentalStats = filteredProperties.filter(p => p.isRental);
 
     return (
         <div className="bg-[#121212] min-h-screen">
@@ -33,7 +30,7 @@ export default function RentalsPage() {
                     className="text-center mb-16"
                 >
                     <motion.h1
-                        className="text-6xl md:text-8xl font-bold mb-6 bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent"
+                        className="text-6xl md:text-8xl font-bold mb-6 text-white"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
@@ -59,7 +56,7 @@ export default function RentalsPage() {
                         className="flex justify-center gap-12 mb-12"
                     >
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-[#009B77]">{rentalStats.length}</div>
+                            <div className="text-3xl font-bold text-[#009B77]">{filteredProperties.length}</div>
                             <div className="text-sm text-white/50">Propiedades</div>
                         </div>
                         <div className="text-center">
@@ -83,16 +80,7 @@ export default function RentalsPage() {
                     <SearchBar />
                 </motion.div>
 
-                {/* Stats Overview */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="mb-12"
-                >
-                    <PropertyStats />
-                </motion.div>
-
+        
                 {/* Featured Properties */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -101,10 +89,14 @@ export default function RentalsPage() {
                     className="mb-16"
                 >
                     <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-white mb-2">Propiedades Destacadas</h2>
-                        <p className="text-white/60">Selección premium de propiedades para alquilar</p>
+                        <h2 className="text-3xl font-bold text-white mb-2">
+                            {onFilterActive ? 'Resultados de Búsqueda' : 'Propiedades Destacadas'}
+                        </h2>
+                        <p className="text-white/60">
+                            {onFilterActive ? `Se encontraron ${filteredProperties.length} propiedades que coinciden con tu búsqueda` : 'Selección premium de propiedades para alquilar'}
+                        </p>
                     </div>
-                    <FeaturedCarousel properties={rentalStats} />
+                    <FeaturedCarousel properties={filteredProperties} />
                 </motion.div>
 
                 {/* Properties Catalog */}
@@ -115,8 +107,10 @@ export default function RentalsPage() {
                 >
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h3 className="text-2xl font-bold text-white mb-1">Todas las Propiedades</h3>
-                            <p className="text-white/50 text-sm">{rentalStats.length} propiedades disponibles</p>
+                            <h3 className="text-2xl font-bold text-white mb-1">
+                                {onFilterActive ? 'Resultados de Búsqueda' : 'Todas las Propiedades'}
+                            </h3>
+                            <p className="text-white/50 text-sm">{filteredProperties.length} propiedades disponibles</p>
                         </div>
 
                         <div className="flex items-center gap-4">
@@ -125,8 +119,8 @@ export default function RentalsPage() {
                         </div>
                     </div>
 
-                    {rentalStats.length > 0 ? (
-                        <PropertyGrid properties={rentalStats} />
+                    {filteredProperties.length > 0 ? (
+                        <PropertyGrid properties={filteredProperties} />
                     ) : (
                         <EmptyState />
                     )}

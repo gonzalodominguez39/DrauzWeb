@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiTrendingUp, FiHeart, FiTarget, FiZap } from 'react-icons/fi';
+import { FaCouch, FaDog, FaCar, FaLeaf } from 'react-icons/fa';
 
 export const SmartFilters = () => {
     const [budget, setBudget] = useState(2000);
@@ -63,10 +64,10 @@ export const SmartFilters = () => {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                     {[
-                        { key: 'furnished', label: 'Amueblado', icon: '🛋️' },
-                        { key: 'petFriendly', label: 'Pet Friendly', icon: '🐕' },
-                        { key: 'parking', label: 'Parking', icon: '🚗' },
-                        { key: 'garden', label: 'Jardín', icon: '🌱' }
+                        { key: 'furnished', label: 'Amueblado', icon: FaCouch },
+                        { key: 'petFriendly', label: 'Pet Friendly', icon: FaDog },
+                        { key: 'parking', label: 'Parking', icon: FaCar },
+                        { key: 'garden', label: 'Jardín', icon: FaLeaf }
                     ].map((pref, index) => (
                         <motion.button
                             key={pref.key}
@@ -83,7 +84,9 @@ export const SmartFilters = () => {
                             }`}
                         >
                             <div className="flex items-center gap-2">
-                                <span className="text-lg">{pref.icon}</span>
+                                <span className="text-lg">
+                                    {React.createElement(pref.icon)}
+                                </span>
                                 <span className="text-sm font-medium">{pref.label}</span>
                             </div>
                         </motion.button>

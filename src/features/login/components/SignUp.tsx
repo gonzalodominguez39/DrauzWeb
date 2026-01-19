@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion"
 import { useSignup } from "../hooks/useSignup"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuthStore } from "../store/useAuthStore";
 
 interface SignupFormProps extends React.ComponentProps<"div"> { }
@@ -22,6 +22,25 @@ export function SignupForm({
         password: "",
         confirmPassword: "",
     });
+    const [fieldErrors, setFieldErrors] = useState({
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
+
+    // Handle server errors and map to specific fields
+    useEffect(() => {
+        if (error) {
+            const errorMsg = error.toLowerCase();
+            if (errorMsg.includes("email") || errorMsg.includes("usuario")) {
+                setFieldErrors(prev => ({ ...prev, email: "Este email ya está registrado" }));
+            } else if (errorMsg.includes("contraseña") || errorMsg.includes("password")) {
+                setFieldErrors(prev => ({ ...prev, password: "La contraseña no cumple los requisitos" }));
+            } else {
+                setFieldErrors(prev => ({ ...prev, email: "Error al crear la cuenta" }));
+            }
+        }
+    }, [error]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -29,11 +48,51 @@ export function SignupForm({
             ...prev,
             [id]: value,
         }));
+        // Clear field error when user starts typing
+        if (fieldErrors[id as keyof typeof fieldErrors]) {
+            setFieldErrors(prev => ({ ...prev, [id]: "" }));
+        }
         if (error) reset();
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Clear previous errors
+        setFieldErrors({ email: "", password: "", confirmPassword: "" });
+
+        // Client-side validation
+        let hasErrors = false;
+        const newErrors = { email: "", password: "", confirmPassword: "" };
+
+        if (!formData.email.trim()) {
+            newErrors.email = "El email es requerido";
+            hasErrors = true;
+        } else if (!formData.email.includes("@")) {
+            newErrors.email = "Ingresa un email válido";
+            hasErrors = true;
+        }
+
+        if (!formData.password.trim()) {
+            newErrors.password = "La contraseña es requerida";
+            hasErrors = true;
+        } else if (formData.password.length < 8) {
+            newErrors.password = "La contraseña debe tener al menos 8 caracteres";
+            hasErrors = true;
+        }
+
+        if (!formData.confirmPassword.trim()) {
+            newErrors.confirmPassword = "Confirma tu contraseña";
+            hasErrors = true;
+        } else if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = "Las contraseñas no coinciden";
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            setFieldErrors(newErrors);
+            return;
+        }
 
         try {
             await signupAsync(formData);
@@ -138,7 +197,7 @@ export function SignupForm({
                 >
                     {/* Email */}
                     <div className="space-y-1.5">
-                        <Label htmlFor="email" className="text-white/70 text-sm font-medium">
+                        <Label htmlFor="email" className={`text-sm font-medium ${fieldErrors.email ? 'text-red-400' : 'text-white/70'}`}>
                             Email
                         </Label>
                         <Input
@@ -149,14 +208,30 @@ export function SignupForm({
                             onChange={handleInputChange}
                             disabled={isLoading}
                             required
-                            className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30 transition-all duration-300 rounded-xl"
+                            className={`h-11 text-white placeholder:text-white/30 transition-all duration-300 rounded-xl ${
+                                fieldErrors.email
+                                    ? 'bg-red-500/10 border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
+                                    : 'bg-white/5 border-white/10 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30'
+                            }`}
                         />
+                        {fieldErrors.email && (
+                            <motion.p
+                                className="text-red-400 text-xs font-medium flex items-center gap-1"
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                            >
+                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                                {fieldErrors.email}
+                            </motion.p>
+                        )}
                     </div>
 
                     {/* Passwords */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">
-                            <Label htmlFor="password" className="text-white/70 text-sm font-medium">
+                            <Label htmlFor="password" className={`text-sm font-medium ${fieldErrors.password ? 'text-red-400' : 'text-white/70'}`}>
                                 Contraseña
                             </Label>
                             <Input
@@ -167,11 +242,27 @@ export function SignupForm({
                                 onChange={handleInputChange}
                                 disabled={isLoading}
                                 required
-                                className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30 transition-all duration-300 rounded-xl"
+                                className={`h-11 text-white placeholder:text-white/30 transition-all duration-300 rounded-xl ${
+                                    fieldErrors.password
+                                        ? 'bg-red-500/10 border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
+                                        : 'bg-white/5 border-white/10 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30'
+                                }`}
                             />
+                            {fieldErrors.password && (
+                                <motion.p
+                                    className="text-red-400 text-xs font-medium flex items-center gap-1"
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {fieldErrors.password}
+                                </motion.p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
-                            <Label htmlFor="confirmPassword" className="text-white/70 text-sm font-medium">
+                            <Label htmlFor="confirmPassword" className={`text-sm font-medium ${fieldErrors.confirmPassword ? 'text-red-400' : 'text-white/70'}`}>
                                 Confirmar
                             </Label>
                             <Input
@@ -182,8 +273,24 @@ export function SignupForm({
                                 onChange={handleInputChange}
                                 disabled={isLoading}
                                 required
-                                className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30 transition-all duration-300 rounded-xl"
+                                className={`h-11 text-white placeholder:text-white/30 transition-all duration-300 rounded-xl ${
+                                    fieldErrors.confirmPassword
+                                        ? 'bg-red-500/10 border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
+                                        : 'bg-white/5 border-white/10 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30'
+                                }`}
                             />
+                            {fieldErrors.confirmPassword && (
+                                <motion.p
+                                    className="text-red-400 text-xs font-medium flex items-center gap-1"
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {fieldErrors.confirmPassword}
+                                </motion.p>
+                            )}
                         </div>
                     </div>
 

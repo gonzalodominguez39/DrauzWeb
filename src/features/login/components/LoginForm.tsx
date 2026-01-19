@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuthStore } from "../store/useAuthStore";
 import { useLoginAuth } from "../hooks/useLoginAuth";
 
@@ -16,18 +16,45 @@ export function LoginForm({
     ...props
 }: LoginFormProps) {
     const { onSignupClick } = useAuthStore();
-    const { onLogin } = useLoginAuth();
+    const { onLogin, error, isLoading } = useLoginAuth();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [emailError, setEmailError] = useState<string>("");
+    const [passwordError, setPasswordError] = useState<string>("");
+
+    // Handle server errors
+    useEffect(() => {
+        if (error) {
+            if (error.toLowerCase().includes("email") || error.toLowerCase().includes("usuario")) {
+                setEmailError("Email o usuario incorrecto");
+            } else if (error.toLowerCase().includes("contraseña") || error.toLowerCase().includes("password")) {
+                setPasswordError("Contraseña incorrecta");
+            } else {
+                setEmailError("Credenciales incorrectas");
+            }
+        }
+    }, [error]);
 
     const handleLogin = async () => {
-        setIsLoading(true);
-        try {
-            await onLogin({ email, password });
-        } finally {
-            setIsLoading(false);
+        // Clear previous errors
+        setEmailError("");
+        setPasswordError("");
+
+        // Basic validation
+        if (!email.trim()) {
+            setEmailError("El email es requerido");
+            return;
         }
+        if (!password.trim()) {
+            setPasswordError("La contraseña es requerida");
+            return;
+        }
+        if (!email.includes("@")) {
+            setEmailError("Ingresa un email válido");
+            return;
+        }
+
+        onLogin({ email, password });
     };
 
     return (
@@ -105,7 +132,7 @@ export function LoginForm({
             >
                 {/* Email */}
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="text-white/70 text-sm font-medium">
+                    <Label htmlFor="email" className={`text-sm font-medium ${emailError ? 'text-red-400' : 'text-white/70'}`}>
                         Email
                     </Label>
                     <Input
@@ -114,15 +141,34 @@ export function LoginForm({
                         placeholder="nombre@ejemplo.com"
                         required
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30 transition-all duration-300 rounded-xl"
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (emailError) setEmailError("");
+                        }}
+                        className={`h-12 text-white placeholder:text-white/30 transition-all duration-300 rounded-xl ${
+                            emailError
+                                ? 'bg-red-500/10 border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
+                                : 'bg-white/5 border-white/10 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30'
+                        }`}
                     />
+                    {emailError && (
+                        <motion.p
+                            className="text-red-400 text-xs font-medium flex items-center gap-1"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            {emailError}
+                        </motion.p>
+                    )}
                 </div>
 
                 {/* Password */}
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                        <Label htmlFor="password" className="text-white/70 text-sm font-medium">
+                        <Label htmlFor="password" className={`text-sm font-medium ${passwordError ? 'text-red-400' : 'text-white/70'}`}>
                             Contraseña
                         </Label>
                         <a href="#" className="text-xs text-[#009B77] hover:text-[#00b388] transition-colors">
@@ -135,9 +181,28 @@ export function LoginForm({
                         placeholder="••••••••"
                         required
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30 transition-all duration-300 rounded-xl"
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            if (passwordError) setPasswordError("");
+                        }}
+                        className={`h-12 text-white placeholder:text-white/30 transition-all duration-300 rounded-xl ${
+                            passwordError
+                                ? 'bg-red-500/10 border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
+                                : 'bg-white/5 border-white/10 focus:border-[#009B77] focus:ring-1 focus:ring-[#009B77]/30'
+                        }`}
                     />
+                    {passwordError && (
+                        <motion.p
+                            className="text-red-400 text-xs font-medium flex items-center gap-1"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            {passwordError}
+                        </motion.p>
+                    )}
                 </div>
             </motion.div>
 

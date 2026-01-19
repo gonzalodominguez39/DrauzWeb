@@ -40,7 +40,7 @@ export const HeroCarousel = () => {
     const currentProperty = heroProperties[currentIndex];
 
     return (
-        <section className="relative h-[100vh] min-h-[600px] md:min-h-[600px] overflow-hidden">
+        <section className="relative h-screen min-h-150 md:min-h-150 overflow-hidden">
             {/* Background Images */}
             <AnimatePresence mode="wait">
                 <motion.div
@@ -59,8 +59,8 @@ export const HeroCarousel = () => {
                         priority
                     />
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/60 to-[#121212]/30" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#121212]/80 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-[#121212]/60 to-[#121212]/30" />
+                    <div className="absolute inset-0 bg-linear-to-r from-[#121212]/80 via-transparent to-transparent" />
                 </motion.div>
             </AnimatePresence>
 

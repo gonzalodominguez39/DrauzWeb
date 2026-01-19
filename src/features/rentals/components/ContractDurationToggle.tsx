@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { FaCalendarAlt, FaLightbulb } from 'react-icons/fa';
 
 interface ContractDurationToggleProps {
     onDurationChange?: (duration: string) => void;
@@ -25,7 +26,7 @@ export const ContractDurationToggle = ({ onDurationChange }: ContractDurationTog
     return (
         <div className="bg-[#0a0a0a] rounded-xl border border-white/10 p-6">
             <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <span className="text-blue-400">📅</span>
+                <FaCalendarAlt className="text-blue-400" />
                 Duración del Contrato
             </h3>
 
@@ -59,8 +60,9 @@ export const ContractDurationToggle = ({ onDurationChange }: ContractDurationTog
                 transition={{ delay: 0.5 }}
                 className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg"
             >
-                <p className="text-blue-300 text-xs text-center">
-                    💡 Los contratos más largos suelen tener descuentos en la renta
+                <p className="text-blue-300 text-xs text-center flex items-center justify-center gap-1">
+                    <FaLightbulb className="text-blue-400" />
+                    Los contratos más largos suelen tener descuentos en la renta
                 </p>
             </motion.div>
         </div>

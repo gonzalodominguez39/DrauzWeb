@@ -30,7 +30,7 @@ const Login = ({ authView }: LoginProps) => {
                         exit={{ scale: 0.9, opacity: 0, y: 30 }}
                         transition={{ type: "spring", duration: 0.6, bounce: 0.2 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full max-w-5xl h-[680px] overflow-hidden rounded-3xl shadow-2xl shadow-black/50"
+                        className="w-full max-w-5xl h-170 overflow-hidden rounded-3xl shadow-2xl shadow-black/50"
                     >
                         <div className="flex h-full bg-[#0a0a0a]">
                             {/* Left Side - Hero Image */}
@@ -75,7 +75,7 @@ const Login = ({ authView }: LoginProps) => {
                                         {/* Headline */}
                                         <h2 className="text-4xl font-bold text-white mb-4 leading-tight">
                                             Encuentra tu<br />
-                                            <span className="bg-linear-to-r from-[#009B77] to-[#00d9a5] bg-clip-text text-transparent">
+                                            <span className="text-white">
                                                 hogar ideal
                                             </span>
                                         </h2>
@@ -112,12 +112,16 @@ const Login = ({ authView }: LoginProps) => {
                                 transition={{ delay: 0.2, duration: 0.5 }}
                             >
                                 {/* Subtle gradient background */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#009B77]/5 via-transparent to-transparent" />
+                                <div className="absolute inset-0 bg-linear-to-br from-[#009B77]/5 via-transparent to-transparent" />
 
                                 {/* Close Button */}
                                 <motion.button
-                                    onClick={onCloseClick}
-                                    className="absolute right-6 top-6 p-2.5 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all duration-300 z-10"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onCloseClick();
+                                    }}
+                                    className="absolute right-6 top-6 p-3 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all duration-300 z-20 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
                                 >

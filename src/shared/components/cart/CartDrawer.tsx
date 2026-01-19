@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '@/shared/stores/useCartStore';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaTimes, FaTrash } from 'react-icons/fa';
+import { FaTimes, FaTrash, FaHome, FaMapMarker } from 'react-icons/fa';
 import { useEffect, useRef } from 'react';
 
 interface CartDrawerProps {
@@ -67,7 +67,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                         {items.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
                                 <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-2">
-                                    <span className="text-4xl">🏠</span>
+                                    <FaHome className="text-4xl text-white/60" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-white">Tu lista está vacía</h3>
                                 <p className="text-white/40 max-w-[250px]">
@@ -104,7 +104,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                                                 <div>
                                                     <h3 className="text-white font-bold line-clamp-1 text-lg mb-1">{item.title}</h3>
                                                     <p className="text-white/60 text-sm line-clamp-2 leading-relaxed flex items-start gap-1">
-                                                        <span className="shrink-0 mt-0.5">📍</span>
+                                                        <FaMapMarker className="shrink-0 mt-0.5 text-white/40" />
                                                         {item.location}
                                                     </p>
                                                 </div>

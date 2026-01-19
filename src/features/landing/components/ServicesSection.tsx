@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface Service {
@@ -97,7 +98,7 @@ export const ServicesSection = () => {
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
                         Soluciones Inmobiliarias
                         <br />
-                        <span className="bg-linear-to-r from-[#009B77] to-[#00d9a5] bg-clip-text text-transparent">
+                        <span className="text-white">
                             a tu medida
                         </span>
                     </h2>
@@ -119,7 +120,7 @@ export const ServicesSection = () => {
                             onMouseLeave={() => setActiveService(null)}
                             className={`relative group p-8 rounded-3xl border transition-all duration-500 cursor-pointer ${activeService === service.id
                                     ? 'bg-white/5 border-white/20 scale-[1.02]'
-                                    : 'bg-white/[0.02] border-white/10 hover:bg-white/5'
+                                    : 'bg-white/2 border-white/10 hover:bg-white/5'
                                 }`}
                         >
                             {/* Glow Effect */}
@@ -185,26 +186,50 @@ export const ServicesSection = () => {
                                 </ul>
 
                                 {/* CTA */}
-                                <button
-                                    className="mt-8 flex items-center gap-2 text-sm font-medium transition-all duration-300 group/btn"
-                                    style={{ color: service.color }}
-                                >
-                                    Más información
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="group-hover/btn:translate-x-1 transition-transform"
+                                {service.id === 'tasacion' ? (
+                                    <Link
+                                        href="/valuation"
+                                        className="mt-8 flex items-center gap-2 text-sm font-medium transition-all duration-300 group/btn"
+                                        style={{ color: service.color }}
                                     >
-                                        <path d="m9 18 6-6-6-6" />
-                                    </svg>
-                                </button>
+                                        Calcular tasación
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            className="group-hover/btn:translate-x-1 transition-transform"
+                                        >
+                                            <path d="m9 18 6-6-6-6" />
+                                        </svg>
+                                    </Link>
+                                ) : (
+                                    <button
+                                        className="mt-8 flex items-center gap-2 text-sm font-medium transition-all duration-300 group/btn"
+                                        style={{ color: service.color }}
+                                    >
+                                        Más información
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            className="group-hover/btn:translate-x-1 transition-transform"
+                                        >
+                                            <path d="m9 18 6-6-6-6" />
+                                        </svg>
+                                    </button>
+                                )}
                             </div>
 
                             {/* Corner Decoration */}

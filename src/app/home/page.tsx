@@ -24,7 +24,7 @@ export default function HomePage() {
                     transition={{ duration: 0.5 }}
                     className="mb-8"
                 >
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-white via-[#009B77] to-white/80 bg-clip-text text-transparent">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
                         Encuentra tu hogar ideal
                     </h1>
                     <p className="text-white/60 text-lg max-w-2xl">

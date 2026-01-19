@@ -1,17 +1,17 @@
 'use client';
 
 import React from 'react';
-import { FiShoppingCart, FiTrendingUp, FiKey, FiBarChart, FiLock, FiHeadphones } from 'react-icons/fi';
+import { FaHome, FaMoneyBillWave, FaKey, FaChartBar, FaShieldAlt, FaHandshake } from 'react-icons/fa';
 import { aboutData } from '../data/aboutData';
 
 export const ServicesAboutSection = () => {
   const icons = [
-    <FiShoppingCart key="1" />,
-    <FiTrendingUp key="2" />,
-    <FiKey key="3" />,
-    <FiBarChart key="4" />,
-    <FiLock key="5" />,
-    <FiHeadphones key="6" />
+    <FaHome key="1" />,
+    <FaMoneyBillWave key="2" />,
+    <FaKey key="3" />,
+    <FaChartBar key="4" />,
+    <FaShieldAlt key="5" />,
+    <FaHandshake key="6" />
   ];
 
   return (

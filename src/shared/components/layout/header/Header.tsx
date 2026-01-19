@@ -17,8 +17,8 @@ import { CartDrawer } from '../../cart/CartDrawer';
 
 const NAV_ITEMS = [
   { label: 'Venta', href: '/sales' },
-   { label: 'Alquiler', href: '/rentals' },
-  { label: 'Proyectos', href: '#' },
+  { label: 'Alquiler', href: '/rentals' },
+  { label: 'Tasación', href: '/valuation' },
   { label: 'Nosotros', href: '/about-us' },
   { label: 'Contacto', href: '/contact' },
 ];
@@ -119,7 +119,7 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
             {/* Company Name */}
             <motion.h2
               variants={itemVariants}
-              className="text-xl md:text-3xl font-bold leading-tight tracking-[-0.015em] flex-1 bg-linear-to-r from-white  to-white bg-clip-text text-transparent"
+              className="text-xl md:text-3xl font-bold leading-tight tracking-[-0.015em] flex-1 text-white"
             >
               {COMPANY_INFO.name}
             </motion.h2>
@@ -174,7 +174,7 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
                   {user?.email}
                 </span>
                 <motion.button
-                  className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 text-base font-bold leading-normal tracking-[0.015em] transition-all"
+                  className="flex min-w-25 cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 text-base font-bold leading-normal tracking-[0.015em] transition-all"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
@@ -187,7 +187,7 @@ export const Header = ({ onLoginClick, isSticky = true, isCartOpen, toggleCart }
               </motion.div>
             ) : (
               <motion.button
-                className="flex min-w-[100px] cursor-pointer items-center justify-center mr-4 overflow-hidden rounded-lg h-12 px-6 bg-linear-to-r from-[#009B77] to-[#00b388] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-[#009B77]/30"
+                className="flex min-w-25 cursor-pointer items-center justify-center mr-4 overflow-hidden rounded-lg h-12 px-6 bg-linear-to-r from-[#009B77] to-[#00b388] text-[#121212] text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-[#009B77]/30"
                 whileHover={{
                   scale: 1.05,
                   boxShadow: '0 0 25px rgba(0, 155, 119, 0.6)',

@@ -3,6 +3,7 @@
 import { HeroCarousel } from './components/HeroCarousel';
 import { FeaturedSection } from './components/FeaturedSection';
 import { ServicesSection } from './components/ServicesSection';
+import { ValuationPreview } from './components/ValuationPreview';
 import { CTASection } from './components/CTASection';
 
 export const LandingPage = () => {
@@ -14,6 +15,7 @@ export const LandingPage = () => {
       <main>
         <FeaturedSection />
         <ServicesSection />
+        <ValuationPreview />
         <CTASection />
       </main>
     </div>
