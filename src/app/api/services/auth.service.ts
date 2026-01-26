@@ -7,10 +7,9 @@ export class AuthService {
   static async signUp(
     email: string,
     password: string,
-    role: string
+    role: string,
   ): Promise<UserResponse> {
     const { data, error } = await AuthRepository.signUp(email, password);
-    console.log(email, password);
     if (error || !data.user) {
       throw error ?? new Error("Auth failed");
     }

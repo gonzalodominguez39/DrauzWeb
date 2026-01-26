@@ -4,7 +4,6 @@ import { FaWhatsapp } from 'react-icons/fa'
 
 export const ButtonWpp = () => {
     const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WPP_NUMBER
-    console.log("WHATSAPP_NUMBER", WHATSAPP_NUMBER)
 
     return (
         <>
